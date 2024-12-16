@@ -1,24 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive File Organizer System</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Organizer System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+    }
+    #folders, #file-list, #bin {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 30%;
+    }
+    .folder, .file, .bin-item {
+      cursor: pointer;
+      padding: 10px;
+      margin: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .folder:hover, .file:hover, .bin-item:hover {
+      background: #f0f0f0;
+    }
+    img {
+      display: block;
+      max-width: 50px;
+      margin-bottom: 10px;
+    }
+    .search-sort {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      width: 100%;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <div id="container">
-        <div id="folderContainer"></div>
-        <div id="fileListContainer">
-            <input type="text" id="searchInput" placeholder="Search files...">
-            <button id="sortButton">Sort</button>
-            <div id="fileList"></div>
-        </div>
-        <div id="binContainer">
-            <h2>Bin</h2>
-            <div id="binList"></div>
-        </div>
-    </div>
-    <script src="script.js"></script>
+  <div class="search-sort">
+    <input type="text" id="search" placeholder="Search files..." oninput="searchFiles()" />
+    <button onclick="sortFiles()">Sort Files</button>
+  </div>
+  <div class="container">
+    <div id="folders"></div>
+    <div id="file-list"></div>
+    <div id="bin"></div>
+  </div>
 </body>
+<script src="script.js"></script>
 </html>
