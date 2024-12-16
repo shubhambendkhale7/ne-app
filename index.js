@@ -18,17 +18,28 @@ const fileIcons = {
   '.zip': 'https://via.placeholder.com/200?text=ZIP',
 };
 
-let bin = [];
+let bin = JSON.parse(localStorage.getItem('bin')) || [];
 let actionPromise;
 
-const categorizedFiles = files.reduce((acc, fileName) => {
-  const fileType = `.${fileName.split('.').pop()}`;
-  if (!acc[fileType]) {
-    acc[fileType] = [];
-  }
-  acc[fileType].push({ id: Date.now() + Math.random(), name: fileName, type: fileType });
-  return acc;
-}, {});
+// Load files from local storage or use default files
+let categorizedFiles = JSON.parse(localStorage.getItem('categorizedFiles')) || categorizeFiles(files);
+
+function categorizeFiles(files) {
+  return files.reduce((acc, fileName) => {
+    const fileType = `.${fileName.split('.').pop()}`;
+    if (!acc[fileType]) {
+      acc[fileType] = [];
+    }
+    acc[fileType].push({ id: Date.now() + Math.random(), name: fileName, type: fileType });
+    return acc;
+  }, {});
+}
+
+// Save categorizedFiles and bin to local storage
+function saveToLocalStorage() {
+  localStorage.setItem('categorizedFiles', JSON.stringify(categorizedFiles));
+  localStorage.setItem('bin', JSON.stringify(bin));
+}
 
 function displayFolders(categorizedFiles) {
   const folderContainer = document.getElementById('folders');
@@ -50,14 +61,20 @@ function displayFiles(files) {
     icon.src = fileIcons[file.type] || 'https://via.placeholder.com/200?text=FILE';
     const fileName = document.createElement('p');
     fileName.textContent = file.name.split('.').slice(0, -1).join('.');
-    
+
     // Add delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = () => deleteFile(file);
+    
+    // Add edit button
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = () => editFileName(file);
 
     fileItem.appendChild(icon);
     fileItem.appendChild(fileName);
+    fileItem.appendChild(editButton);
     fileItem.appendChild(deleteButton);
     fileContainer.appendChild(fileItem);
   });
@@ -88,9 +105,13 @@ function sortFiles() {
 
 function deleteFile(file) {
   showModal('Are you sure you want to delete this file?').then(() => {
+    const fileType = file.type;
+    categorizedFiles[fileType] = categorizedFiles[fileType].filter(f => f.id !== file.id);
     bin.push(file);
+    saveToLocalStorage();
+    displayFolders(categorizedFiles);
     displayBin();
-    // Remove the file from its original folder and update the UI
+    autoDelete(file); // Schedule auto-delete for this file
   }).catch(() => {
     console.log('Deletion cancelled');
   });
@@ -105,7 +126,7 @@ function displayBin() {
     icon.src = fileIcons[file.type] || 'https://via.placeholder.com/200?text=FILE';
     const fileName = document.createElement('p');
     fileName.textContent = file.name.split('.').slice(0, -1).join('.');
-    
+
     // Add restore button
     const restoreButton = document.createElement('button');
     restoreButton.textContent = 'Restore';
@@ -120,26 +141,40 @@ function displayBin() {
 
 function restoreFile(file) {
   bin = bin.filter(f => f.id !== file.id);
-  // Restore the file to its original folder and update the UI
+  const fileType = file.type;
+  if (!categorizedFiles[fileType]) {
+    categorizedFiles[fileType] = [];
+  }
+  categorizedFiles[fileType].push(file);
+  saveToLocalStorage();
+  displayFolders(categorizedFiles);
+  displayFiles(categorizedFiles[fileType]);
   displayBin();
 }
 
 function clearBin() {
   bin = [];
+  saveToLocalStorage();
   displayBin();
 }
 
-function autoDelete() {
+function autoDelete(file) {
   setTimeout(() => {
-    bin = [];
+    bin = bin.filter(f => f.id !== file.id);
+    saveToLocalStorage();
     displayBin();
   }, 30000); // 30 seconds
 }
 
-function editFileName(file, newName) {
-  const oldName = file.name;
-  file.name = newName;
-  // Log the change in the file's history and update local storage
+function editFileName(file) {
+  const newFileName = prompt('Enter new file name:', file.name);
+  if (newFileName) {
+    const fileType = file.type;
+    file.name = newFileName;
+    saveToLocalStorage();
+    displayFolders(categorizedFiles);
+    displayFiles(categorizedFiles[fileType]);
+  }
 }
 
 function showModal(message) {
@@ -162,3 +197,4 @@ function cancelAction() {
 
 // Initial display
 displayFolders(categorizedFiles);
+displayBin();
