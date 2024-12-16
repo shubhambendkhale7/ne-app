@@ -1,130 +1,127 @@
 const files = [
-    { id: 1, name: 'document1.txt', type: '.txt' },
-    { id: 2, name: 'presentation1.pdf', type: '.pdf' },
-    { id: 3, name: 'song1.mp3', type: '.mp3' },
-    // Continue for all files...
+  { id: 1, name: 'document1', type: '.txt' },
+  { id: 2, name: 'presentation1', type: '.pdf' },
+  { id: 3, name: 'song1', type: '.mp3' },
+  { id: 4, name: 'installer1', type: '.exe' },
+  { id: 5, name: 'archive1', type: '.rar' },
+  { id: 6, name: 'report1', type: '.docx' },
+  { id: 7, name: 'image1', type: '.jpg' },
+  { id: 8, name: 'graphic1', type: '.png' },
+  { id: 9, name: 'animation1', type: '.gif' },
+  { id: 10, name: 'compressed1', type: '.zip' },
+  // more files as needed
 ];
 
 const fileIcons = {
-    '.txt': 'https://via.placeholder.com/200?text=TXT',
-    '.pdf': 'https://via.placeholder.com/200?text=PDF',
-    '.mp3': 'https://via.placeholder.com/200?text=MP3',
-    '.exe': 'https://via.placeholder.com/200?text=EXE',
-    '.rar': 'https://via.placeholder.com/200?text=RAR',
-    '.docx': 'https://via.placeholder.com/200?text=DOCX',
-    '.jpg': 'https://via.placeholder.com/200?text=JPG',
-    '.png': 'https://via.placeholder.com/200?text=PNG',
-    '.gif': 'https://via.placeholder.com/200?text=GIF',
-    '.zip': 'https://via.placeholder.com/200?text=ZIP',
+  '.txt': 'https://via.placeholder.com/200?text=TXT',
+  '.pdf': 'https://via.placeholder.com/200?text=PDF',
+  '.mp3': 'https://via.placeholder.com/200?text=MP3',
+  '.exe': 'https://via.placeholder.com/200?text=EXE',
+  '.rar': 'https://via.placeholder.com/200?text=RAR',
+  '.docx': 'https://via.placeholder.com/200?text=DOCX',
+  '.jpg': 'https://via.placeholder.com/200?text=JPG',
+  '.png': 'https://via.placeholder.com/200?text=PNG',
+  '.gif': 'https://via.placeholder.com/200?text=GIF',
+  '.zip': 'https://via.placeholder.com/200?text=ZIP',
 };
 
-let categorizedFiles = {};
-let bin = JSON.parse(localStorage.getItem('bin')) || [];
+const bin = [];
 
-function categorizeFiles() {
-    categorizedFiles = files.reduce((acc, file) => {
-        if (file) {
-            if (!acc[file.type]) {
-                acc[file.type] = [];
-            }
-            acc[file.type].push(file);
-        }
-        return acc;
-    }, {});
-}
-
-function displayFolders() {
-    const folderContainer = document.getElementById('folderContainer');
-    folderContainer.innerHTML = '';
-    for (const folder in categorizedFiles) {
-        const folderElement = document.createElement('div');
-        folderElement.textContent = folder;
-        folderElement.classList.add('folder');
-        folderContainer.appendChild(folderElement);
-
-        folderElement.addEventListener('click', () => displayFiles(folder));
+const categorizeFiles = (files) => {
+  return files.reduce((acc, file) => {
+    if (!acc[file.type]) {
+      acc[file.type] = [];
     }
-}
+    acc[file.type].push(file);
+    return acc;
+  }, {});
+};
 
-function displayFiles(folder) {
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = '';
+const displayFolders = (folders) => {
+  const folderContainer = document.getElementById('folders');
+  folderContainer.innerHTML = '';
+  for (const [type, files] of Object.entries(folders)) {
+    const folder = document.createElement('div');
+    folder.textContent = type;
+    folder.className = 'folder';
+    folder.onclick = () => displayFiles(files);
+    folderContainer.appendChild(folder);
+  }
+};
 
-    categorizedFiles[folder].forEach(file => {
-        const fileElement = document.createElement('div');
-        const icon = document.createElement('img');
-        icon.src = fileIcons[file.type];
-        fileElement.appendChild(icon);
+const displayFiles = (files) => {
+  const fileList = document.getElementById('file-list');
+  fileList.innerHTML = '';
+  files.forEach(file => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file';
+    const icon = document.createElement('img');
+    icon.src = fileIcons[file.type];
+    const fileName = document.createElement('div');
+    fileName.textContent = file.name;
+    fileItem.appendChild(icon);
+    fileItem.appendChild(fileName);
+    fileItem.onclick = () => addToBin(file);
+    fileList.appendChild(fileItem);
+  });
+};
 
-        const fileName = document.createElement('span');
-        fileName.textContent = file.name.replace(file.type, '');
-        fileElement.appendChild(fileName);
+const searchFiles = () => {
+  const query = document.getElementById('search').value.toLowerCase();
+  const files = Array.from(document.querySelectorAll('#file-list .file'));
+  files.forEach(file => {
+    file.style.display = file.textContent.toLowerCase().includes(query) ? '' : 'none';
+  });
+};
 
-        fileElement.classList.add('file');
-        fileList.appendChild(fileElement);
-    });
-}
+let isAscending = true;
 
-function searchFiles(query, folder) {
-    return categorizedFiles[folder].filter(file => file.name.includes(query));
-}
+const sortFiles = () => {
+  const files = Array.from(document.querySelectorAll('#file-list .file'));
+  files.sort((a, b) => isAscending
+    ? a.textContent.localeCompare(b.textContent)
+    : b.textContent.localeCompare(a.textContent));
+  
+  const fileList = document.getElementById('file-list');
+  fileList.innerHTML = '';
+  files.forEach(file => fileList.appendChild(file));
+  isAscending = !isAscending;
+};
 
-function sortFiles(folder, ascending = true) {
-    categorizedFiles[folder].sort((a, b) => {
-        if (ascending) {
-            return a.name.localeCompare(b.name);
-        } else {
-            return b.name.localeCompare(a.name);
-        }
-    });
-}
+const addToBin = (file) => {
+  bin.push(file);
+  displayBin();
+  setTimeout(() => removeFromBin(file), 30000);
+};
 
-function updateDisplay(folder, query = '', ascending = true) {
-    let filesToDisplay = searchFiles(query, folder);
-    sortFiles(folder, ascending);
-    displayFiles(folder);
-}
+const removeFromBin = (file) => {
+  const index = bin.indexOf(file);
+  if (index !== -1) {
+    bin.splice(index, 1);
+    displayBin();
+  }
+};
 
-function addToBin(file) {
-    bin.push(file);
-    updateLocalStorage();
-}
+const displayBin = () => {
+  const binContainer = document.getElementById('bin');
+  binContainer.innerHTML = 'Bin:';
+  bin.forEach(file => {
+    const binItem = document.createElement('div');
+    binItem.className = 'bin-item';
+    binItem.textContent = file.name;
+    binItem.onclick = () => restoreFromBin(file);
+    binContainer.appendChild(binItem);
+  });
+};
 
-function restoreFromBin(file) {
-    bin = bin.filter(binFile => binFile.id !== file.id);
-    categorizedFiles[file.type].push(file);
-    updateLocalStorage();
-}
+const restoreFromBin = (file) => {
+  const index = bin.indexOf(file);
+  if (index !== -1) {
+    bin.splice(index, 1);
+    displayBin();
+    displayFiles(categorizeFiles(files)[file.type]);
+  }
+};
 
-function clearBin() {
-    bin = [];
-    updateLocalStorage();
-}
-
-function updateLocalStorage() {
-    localStorage.setItem('bin', JSON.stringify(bin));
-}
-
-function editFileName(file, newName) {
-    const history = JSON.parse(localStorage.getItem('history')) || {};
-    if (!history[file.id]) history[file.id] = [];
-    history[file.id].push({ action: 'edit', oldName: file.name, newName, timestamp: Date.now() });
-
-    file.name = newName;
-    localStorage.setItem('history', JSON.stringify(history));
-    updateLocalStorage();
-}
-
-function confirmAction(action) {
-    return new Promise((resolve, reject) => {
-        if (confirm(`Are you sure you want to ${action}?`)) {
-            resolve('Action confirmed');
-        } else {
-            reject('Action cancelled');
-        }
-    });
-}
-
-// Initialization
-categorizeFiles();
-displayFolders();
+const folders = categorizeFiles(files);
+displayFolders(folders);
