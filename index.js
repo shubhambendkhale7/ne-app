@@ -50,9 +50,15 @@ function displayFiles(files) {
     icon.src = fileIcons[file.type] || 'https://via.placeholder.com/200?text=FILE';
     const fileName = document.createElement('p');
     fileName.textContent = file.name.split('.').slice(0, -1).join('.');
+    
+    // Add delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = () => deleteFile(file);
+
     fileItem.appendChild(icon);
     fileItem.appendChild(fileName);
-    fileItem.ondblclick = () => deleteFile(file);
+    fileItem.appendChild(deleteButton);
     fileContainer.appendChild(fileItem);
   });
 }
@@ -95,8 +101,19 @@ function displayBin() {
   binContainer.innerHTML = '';
   bin.forEach(file => {
     const fileItem = document.createElement('div');
-    fileItem.textContent = file.name;
-    fileItem.onclick = () => restoreFile(file);
+    const icon = document.createElement('img');
+    icon.src = fileIcons[file.type] || 'https://via.placeholder.com/200?text=FILE';
+    const fileName = document.createElement('p');
+    fileName.textContent = file.name.split('.').slice(0, -1).join('.');
+    
+    // Add restore button
+    const restoreButton = document.createElement('button');
+    restoreButton.textContent = 'Restore';
+    restoreButton.onclick = () => restoreFile(file);
+
+    fileItem.appendChild(icon);
+    fileItem.appendChild(fileName);
+    fileItem.appendChild(restoreButton);
     binContainer.appendChild(fileItem);
   });
 }
