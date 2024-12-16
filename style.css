@@ -1,89 +1,42 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
 #container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+  display: flex;
+  gap: 20px;
 }
 
-#folderContainer, #binContainer {
-    width: 250px;
-    border-right: 1px solid #ccc;
-    padding: 10px;
-    overflow-y: auto;
+#folders, #files-container, #bin-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 30%;
 }
 
-#fileListContainer {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
+#folders div, #files div, #bin div {
+  margin: 5px 0;
+  cursor: pointer;
 }
 
-#searchInput, #sortButton {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
 
-.folder, .file {
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin: 5px 0;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
 }
 
-.folder:hover, .file:hover {
-    background-color: #f0f0f0;
-}
-
-.file img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-#binContainer {
-    border-left: 1px solid #ccc;
-}
-
-#binList .file {
-    justify-content: space-between;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    #folderContainer, #binContainer {
-        width: 200px;
-    }
-
-    #searchInput, #sortButton {
-        width: calc(100% - 20px);
-        margin: 10px;
-    }
-}
-
-@media (max-width: 576px) {
-    #container {
-        flex-direction: column;
-    }
-
-    #folderContainer, #binContainer {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #ccc;
-    }
-
-    #binContainer {
-        border-bottom: none;
-        border-top: 1px solid #ccc;
-    }
+.modal-content button {
+  margin: 10px;
 }
