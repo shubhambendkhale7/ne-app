@@ -1,21 +1,77 @@
 body {
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 #container {
   display: flex;
   gap: 20px;
+  max-width: 1200px;
+  width: 100%;
 }
 
 #folders, #files-container, #bin-container {
+  background-color: #fff;
   border: 1px solid #ccc;
-  padding: 10px;
-  width: 30%;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 350px;
+  box-sizing: border-box;
 }
 
 #folders div, #files div, #bin div {
-  margin: 5px 0;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#folders div:hover, #files div:hover, #bin div:hover {
+  background-color: #eaeaea;
+}
+
+#searchInput {
+  width: calc(100% - 22px); /* adjust for padding and border */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#folders div, #files div, #bin div img {
+  display: block;
+  margin: 0 auto 10px;
+}
+
+#folders div p, #files div p, #bin div p {
+  margin: 0;
+  text-align: center;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 
 #modal {
@@ -35,8 +91,21 @@ body {
   padding: 20px;
   border-radius: 5px;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-content button {
   margin: 10px;
+}
+
+@media (max-width: 768px) {
+  #container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #folders, #files-container, #bin-container {
+    max-width: none;
+    width: 90%;
+  }
 }
