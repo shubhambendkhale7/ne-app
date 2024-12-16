@@ -110,6 +110,7 @@ function deleteFile(file) {
     bin.push(file);
     saveToLocalStorage();
     displayFolders(categorizedFiles);
+    displayFiles(categorizedFiles[fileType]); // Update the displayed files
     displayBin();
     autoDelete(file); // Schedule auto-delete for this file
   }).catch(() => {
