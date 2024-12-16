@@ -7,73 +7,58 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
     }
-    .container {
-      display: flex;
-      justify-content: space-between;
-    }
-    #folders, #file-list, #bin {
-      background: #fff;
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 30%;
-    }
-    .folder, .file, .bin-item {
+    .folder, .file-item {
       cursor: pointer;
       padding: 10px;
-      margin: 5px 0;
-      border-bottom: 1px solid #ddd;
+      margin: 5px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      text-align: center;
     }
-    .folder:hover, .file:hover, .bin-item:hover {
-      background: #f0f0f0;
-    }
-    img {
+    .file-item img {
+      width: 50px;
+      height: 50px;
       display: block;
-      max-width: 50px;
-      margin-bottom: 10px;
+      margin: 0 auto;
     }
-    .search-sort {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
+    #modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      z-index: 1000;
     }
-    input[type="text"] {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-    }
-    button {
-      padding: 10px 20px;
-      background: #007BFF;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-left: 10px;
-    }
-    button:hover {
-      background: #0056b3;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
-  <div class="search-sort">
-    <input type="text" id="search" placeholder="Search files..." oninput="searchFiles()" />
-    <button onclick="sortFiles()">Sort Files</button>
+  <h1>File Organizer System</h1>
+  <div id="folders"></div>
+  <h2>Files</h2>
+  <div id="file-list"></div>
+  <h2>Bin</h2>
+  <div id="bin"></div>
+
+  <!-- Modal for confirmation -->
+  <div id="overlay" style="display: none;"></div>
+  <div id="modal" style="display: none;">
+    <p id="modal-message"></p>
+    <button id="confirm">Yes</button>
+    <button id="cancel">No</button>
   </div>
-  <div class="container">
-    <div id="folders"></div>
-    <div id="file-list"></div>
-    <div id="bin"></div>
-  </div>
+
+  <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
