@@ -1,46 +1,48 @@
 body {
     font-family: Arial, sans-serif;
-    margin:0;
+    margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-#folderContainer {
-    width: 200px;
-    border-right: 1px solid #ccc;
-    padding: 10px;
+#container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
 }
 
-.folder {
-    cursor: pointer;
-    padding: 5px;
-    border: 1px solid #ccc;
-    margin: 5px 0;
+#folderContainer, #binContainer {
+    width: 250px;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: auto;
 }
 
 #fileListContainer {
     flex-grow: 1;
     padding: 10px;
+    overflow-y: auto;
 }
 
-#searchInput {
-    margin-bottom: 10px;
+#searchInput, #sortButton {
     width: 100%;
-    padding: 5px;
-}
-
-#sortButton {
+    padding: 10px;
     margin-bottom: 10px;
 }
 
-.file {
-    display: flex;
-    align-items: center;
-    padding: 5px;
+.folder, .file {
+    padding: 10px;
     border: 1px solid #ccc;
     margin: 5px 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.folder:hover, .file:hover {
+    background-color: #f0f0f0;
 }
 
 .file img {
@@ -50,13 +52,38 @@ body {
 }
 
 #binContainer {
-    width: 200px;
     border-left: 1px solid #ccc;
-    padding: 10px;
 }
 
 #binList .file {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #folderContainer, #binContainer {
+        width: 200px;
+    }
+
+    #searchInput, #sortButton {
+        width: calc(100% - 20px);
+        margin: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    #container {
+        flex-direction: column;
+    }
+
+    #folderContainer, #binContainer {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    #binContainer {
+        border-bottom: none;
+        border-top: 1px solid #ccc;
+    }
 }
