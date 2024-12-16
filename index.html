@@ -3,216 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Organizer System</title>
-  <style>
-    /* Reset some default styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f4f9;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      color: #4CAF50;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-      margin: 20px 0;
-      color: #333;
-    }
-
-    .folder, .file-item {
-      cursor: pointer;
-      padding: 15px;
-      margin: 10px;
-      border-radius: 8px;
-      text-align: center;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .folder {
-      background-color: #007bff;
-      color: white;
-      width: 120px;
-      font-weight: bold;
-      display: inline-block;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .folder:hover {
-      background-color: #0056b3;
-      transform: scale(1.05);
-    }
-
-    .file-item {
-      background-color: #ffffff;
-      width: 120px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      display: inline-block;
-      border-radius: 8px;
-      transition: transform 0.2s;
-    }
-
-    .file-item:hover {
-      transform: scale(1.05);
-      background-color: #e9f7f4;
-    }
-
-    .file-item img {
-      width: 50px;
-      height: 50px;
-      margin-bottom: 10px;
-    }
-
-    .file-item div {
-      font-size: 0.9rem;
-      color: #333;
-    }
-
-    .file-item button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      background-color: #ff4747;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s;
-    }
-
-    .file-item button:hover {
-      background-color: #e04e4e;
-    }
-
-    #modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 30px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: none;
-      z-index: 1001;
-    }
-
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      display: none;
-    }
-
-    #modal p {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-    }
-
-    #confirm, #cancel {
-      padding: 8px 15px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    #confirm {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    #cancel {
-      background-color: #e04e4e;
-      color: white;
-    }
-
-    #confirm:hover {
-      background-color: #45a049;
-    }
-
-    #cancel:hover {
-      background-color: #d43f3f;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .folder, .file-item {
-        width: 100px;
-      }
-
-      #folders, #file-list, #bin {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .folder, .file-item {
-        margin: 10px;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .folder, .file-item {
-        width: 80px;
-        padding: 12px;
-      }
-
-      h1 {
-        font-size: 1.2rem;
-      }
-
-      h2 {
-        font-size: 1rem;
-      }
-
-      .file-item button {
-        padding: 3px 8px;
-      }
-    }
-  </style>
+  <title>File Organizer</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>File Organizer System</h1>
-  <div id="folders"></div>
-  <h2>Files</h2>
-  <div id="file-list"></div>
-  <h2>Bin</h2>
-  <div id="bin"></div>
+  <div id="container">
+    <div id="folders"></div>
+    <div id="files-container">
+      <input type="text" id="searchInput" placeholder="Search files" oninput="searchFiles()">
+      <button onclick="sortFiles()">Sort Files</button>
+      <div id="files"></div>
+    </div>
+    <div id="bin-container">
+      <h2>Bin</h2>
+      <button onclick="clearBin()">Clear Bin</button>
+      <div id="bin"></div>
+    </div>
+  </div>
 
-  <!-- Modal for confirmation -->
-  <div id="overlay"></div>
-  <div id="modal">
-    <p id="modal-message"></p>
-    <button id="confirm">Yes</button>
-    <button id="cancel">No</button>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <p id="modalMessage"></p>
+      <button onclick="confirmAction()">Confirm</button>
+      <button onclick="cancelAction()">Cancel</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
